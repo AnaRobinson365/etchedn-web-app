@@ -1,0 +1,35 @@
+# Python/Django
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+db.sqlite3
+.env
+venv/
+env/
+
+# Django static files
+staticfiles/
+
+# Sensitive files
+
+*.key
+*.pem
+*.env
+.env.local
+
+# Dependency directories
+node_modules/
+bower_components/
+
+# Editor/IDE
+.vscode/
+.idea/
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Local development
+*.log
+*.sqlite

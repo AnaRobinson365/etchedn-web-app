@@ -1,0 +1,169 @@
+{% load static %}
+
+{% block header %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <title>ETCHEDN</title>
+    <!-- Favicon-->
+    <link rel="icon" type="image/png" href="{% static 'assets/logo.png' %}" />
+    <!-- Bootstrap icons-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" rel="stylesheet">
+
+    <!-- Dashboard-->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
+    <link href="/static/css/dashboard_styles.css" rel="stylesheet" />
+    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+    <script>
+        window.addEventListener('DOMContentLoaded', event => {
+          // Fetch the cart count from the server and update the cart count in the header
+          fetch('/get_cart_count/')
+            .then(response => response.json())
+            .then(data => {
+              updateCartCount(data.cartCount);
+            })
+            .catch(error => {
+              console.error('Error fetching cart count:', error);
+            });
+        });
+      </script>
+
+    <!-- Core theme CSS (includes Bootstrap)-->
+    <link href="{% static 'css/dashboard_styles.css' %}" rel="stylesheet" />
+  </head>
+  <body class="sb-nav-fixed">
+    <!-- Navigation-->
+    <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
+        <!-- Navbar Brand-->
+        <a class="navbar-brand" href="{% url 'dashboard_home' %}">
+            <img src="{% static 'assets/logo.png' %}" alt="ETCHEDN Logo" style="height: 30px; margin-left: 30px; margin-right: 15px; margin-top: -10px;">ETCHEDN
+        </a>
+        <!-- Sidebar Toggle-->
+        <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
+        <!-- Navbar Search-->
+        <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0" method="POST" actionaction="{% url 'dashboard_base' %}" data-sb-form-api-token="API_TOKEN">
+            {% csrf_token %}
+            <!-- <div class="input-group">
+                <input class="form-control" type="search" placeholder="Search..." name= "searched" aria-label="Search for..." aria-describedby="btnNavbarSearch" />
+                <button class="btn btn-primary" id="btnNavbarSearch" type="submit"><i class="fas fa-search"></i></button>
+            </div>-->
+        </form>
+        <!-- Navbar-->
+        <ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
+            <li class="nav-item"><a class="nav-link" href="{% url 'dashboard_contact' %}">Contact</a></li>
+            <li class="nav-item"><a class="nav-link" href="{% url 'dashboard_pricing' %}">Pricing</a></li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="bi bi-person"></i>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown" style="width: auto; min-width: 90px; max-width: none;">
+                    <li class="text-center"><a class="dropdown-item" href="{% url 'index' %}">Logout</a></li>
+                </ul>
+            </li>
+            <!--<li class="nav-item"><a class="nav-link" href="{% url 'checkout' %}"><i class="bi-cart2 me-1"></i></a></li>-->
+            <!--<li class="nav-item">
+                <a class="nav-link" href="{% url 'dashboard_checkout' %}">
+                  <i class="bi-cart2 me-1"></i>
+                  <span id="cart-count" style="vertical-align: super; font-size: 75%;"></span>
+                </a>
+            </li>-->
+        </ul>
+    </nav>
+    <div id="layoutSidenav">
+        <div id="layoutSidenav_nav">
+            <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
+                <div class="sb-sidenav-menu">
+                    <div class="nav">
+                        <div class="sb-sidenav-menu-heading">Core</div>
+                        <a class="nav-link" href="{% url 'dashboard_home' %}">
+                            <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                            Dashboard
+                        </a>
+                        <div class="sb-sidenav-menu-heading">Account</div>
+                        <a class="nav-link collapsed" href="{% url 'dashboard_account' %}" data-bs-toggle="collapse" data-bs-target="#collapseLayouts" aria-expanded="false" aria-controls="collapseLayouts">
+                            <div class="sb-nav-link-icon"><i class="fa-solid fa-user-gear"></i></div>
+                            Account
+                            <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                        </a>
+                        <div class="collapse" id="collapseLayouts" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
+                            <nav class="sb-sidenav-menu-nested nav">
+                                <a class="nav-link" href="{% url 'dashboard_account' %}">Account Details</a>
+                                <a class="nav-link" href="https://billing.stripe.com/p/login/bIY2c22GLf986n6000">Billing</a><!-- "{% url 'dashboard_billing' %}" -->
+                                <!--<a class="nav-link" href="{% url 'dashboard_subscriptions' %}">My Subscriptions</a>-->
+                            </nav>
+                        </div>
+                        <div class="sb-sidenav-menu-heading">Support</div>
+                        <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLayouts" aria-expanded="false" aria-controls="collapseLayouts">
+                            <div class="sb-nav-link-icon"><i class="fa-solid fa-headset"></i></div>
+                            Support
+                            <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                        </a>
+                        <div class="collapse" id="collapseLayouts" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
+                            <nav class="sb-sidenav-menu-nested nav">
+                                <a class="nav-link" href="{% url 'dashboard_support' %}">Technical Support</a>
+                                <a class="nav-link" href="{% url 'dashboard_faq' %}">FAQ</a>
+                            </nav>
+                        </div>
+                        <div class="sb-sidenav-menu-heading">Services</div>
+                        <a class="nav-link collapsed" href="{% url 'dashboard_home' %}" data-bs-toggle="collapse" data-bs-target="#collapseLayouts" aria-expanded="false" aria-controls="collapseLayouts">
+                            <div class="sb-nav-link-icon"><i class="fa-solid fa-display"></i></div>
+                            Services
+                            <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                        </a>
+                        <div class="collapse" id="collapseLayouts" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
+                            <nav class="sb-sidenav-menu-nested nav">
+                                <a class="nav-link" href="{% url 'dashboard_pricing' %}">Plans & Subscriptions</a>
+                                <a class="nav-link" href="{% url 'dashboard_contact' %}">Consultation</a>
+                            </nav>
+                        </div>
+                        <div class="sb-sidenav-menu-heading">Analytics</div>
+                        <a class="nav-link" href="{% url 'dashboard_analytics' %}">
+                            <div class="sb-nav-link-icon"><i class="fa-solid fa-database"></i></div>
+                            Analytics
+                        </a>
+                    </div>
+                </div>
+                <div class="sb-sidenav-footer">
+                    <div class="small">Logged in as:</div>
+                    {{ username }}
+                </div>
+            </nav>
+        </div>
+    {% endblock %}
+
+    <!-- Your page content will go here, replace this line with your content blocks -->
+    {% block content %}
+    {% endblock %}
+
+    </main>
+    <!-- Your footer here -->
+    <!-- Footer-->
+    {% block footer %}
+    <footer class="bg-dark py-4 mt-auto">
+      <div class="container px-5">
+          <div class="row align-items-center justify-content-between flex-column flex-sm-row">
+              <div class="col-auto"><div class="small m-0 text-white">&copy; 2024 ETCHEDN</div></div>
+              <!-- <div class="col-auto">
+                  <a class="link-light small" href="{% url 'dashboard_home' %}">Privacy</a>
+                  <span class="text-white mx-1">&middot;</span>
+                  <a class="link-light small" href="{% url 'dashboard_home' %}">Terms</a>
+                  <span class="text-white mx-1">&middot;</span>
+                  <a class="link-light small" href="{% url 'dashboard_home' %}">Contact</a>
+              </div>-->
+          </div>
+      </div>
+  </footer>
+    {% endblock %}
+    <script src="{% static 'js/scripts.js' %}"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js" ></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>
